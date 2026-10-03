@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SnapPay — Pingente exclusivo por estabelecimento</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+<style>
+  :root{
+    --black:#0B0B0B;
+    --orange:#FF6B00;
+    --yellow:#FFC93C;
+    --surface:#F5F4F1;
+    --card:#FFFFFF;
+    --border:#E6E4DE;
+    --text-secondary:#6B6960;
+    --text-muted:#9A978C;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Manrope', -apple-system, sans-serif;
+    background:var(--surface);
+    color:var(--black);
+    padding:40px 16px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:24px;
+  }
+  h1{
+    font-family:'Bricolage Grotesque', sans-serif;
+    font-size:22px;
+    font-weight:600;
+    text-align:center;
+  }
+  .tabs{
+    display:flex;
+    gap:8px;
+    background:var(--card);
+    padding:4px;
+    border-radius:12px;
+    border:1px solid var(--border);
+  }
+  .tab{
+    padding:10px 20px;
+    border-radius:9px;
+    border:none;
+    background:transparent;
+    font-family:'Manrope', sans-serif;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    color:var(--text-secondary);
+    transition:all .15s ease;
+  }
+  .tab.active{
+    background:var(--black);
+    color:#fff;
+  }
+  .phone{
+    width:380px;
+    background:var(--card);
+    border-radius:28px;
+    border:1px solid var(--border);
+    padding:24px 20px;
+    box-shadow:0 2px 24px rgba(0,0,0,.06);
+  }
+  .panel{display:none;}
+  .panel.active{display:block;}
+  .label{
+    font-size:12px;
+    color:var(--text-secondary);
+    font-weight:600;
+    display:block;
+    margin-bottom:6px;
+  }
+  .eyebrow{
+    font-size:12px;
+    color:var(--text-muted);
+    margin-bottom:16px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  input[type="number"], input[type="text"]{
+    width:100%;
+    padding:10px 12px;
+    border-radius:10px;
+    border:1px solid var(--border);
+    font-size:15px;
+    font-family:inherit;
+  }
+  input[type="range"]{
+    width:100%;
+    accent-color:var(--orange);
+    margin:8px 0 4px;
+  }
+  .range-labels{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:20px;
+  }
+  .range-labels .min,.range-labels .max{font-size:11px;color:var(--text-muted);}
+  .range-labels .val{font-size:16px;font-weight:700;}
+  .stat-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:var(--surface);
+    border-radius:10px;
+    padding:12px 14px;
+    margin-bottom:16px;
+  }
+  .stat-row .k{font-size:12px;color:var(--text-secondary);}
+  .stat-row .v{font-size:16px;font-weight:700;}
+  .breakdown{
+    background:var(--surface);
+    border-radius:12px;
+    padding:14px 16px;
+    margin-bottom:20px;
+  }
+  .bd-line{
+    display:flex;
+    justify-content:space-between;
+    font-size:13px;
+    margin-bottom:8px;
+    color:var(--text-secondary);
+  }
+  .bd-line.total{
+    font-weight:700;
+    color:var(--black);
+    border-top:1px solid var(--border);
+    padding-top:8px;
+    margin-top:4px;
+  }
+  .bd-line.month{
+    border-top:1px solid var(--border);
+    padding-top:8px;
+    margin-top:4px;
+    font-weight:700;
+    color:var(--black);
+  }
+  button.primary{
+    width:100%;
+    padding:14px;
+    border-radius:10px;
+    border:none;
+    background:var(--orange);
+    color:#fff;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .hero-card{
+    background:var(--black);
+    color:#fff;
+    border-radius:16px;
+    padding:18px;
+    margin-bottom:14px;
+  }
+  .hero-top{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .hero-logo{
+    width:32px;
+    height:32px;
+    border-radius:8px;
+    background:rgba(255,255,255,.12);
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .hero-logo i{font-size:16px;color:rgba(255,255,255,.5);}
+  .hero-card .club-name{font-size:14px;font-weight:700;}
+  .hero-card .price{
+    font-size:24px;
+    font-weight:700;
+    margin-bottom:2px;
+  }
+  .btn-row{
+    display:flex;
+    gap:8px;
+  }
+  button.secondary{
+    flex:1;
+    padding:11px;
+    border-radius:10px;
+    border:1px solid var(--border);
+    background:#fff;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .fine{
+    font-size:10.5px;
+    color:var(--text-muted);
+    margin-top:10px;
+    line-height:1.5;
+  }
+  .divider{
+    border-top:1px solid var(--border);
+    margin:18px 0 14px;
+  }
+
+  /* logo upload */
+  .logo-upload{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:18px;
+  }
+  .logo-drop{
+    width:56px;
+    height:56px;
+    border-radius:14px;
+    border:1.5px dashed var(--border);
+    background:var(--surface);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    flex-shrink:0;
+    background-size:cover;
+    background-position:center;
+  }
+  .logo-drop i{font-size:20px;color:var(--text-muted);}
+  .logo-drop-text{font-size:12px;color:var(--text-secondary);cursor:pointer;}
+  .logo-drop-text b{color:var(--orange);font-weight:700;}
+
+  /* benefit builder */
+  .benefit-input-row{
+    display:flex;
+    gap:8px;
+    margin-bottom:12px;
+  }
+  .benefit-input-row input{flex:1;}
+  .btn-add{
+    width:40px;
+    border-radius:10px;
+    border:none;
+    background:var(--black);
+    color:#fff;
+    font-size:18px;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .benefit-chip{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:var(--surface);
+    border-radius:9px;
+    padding:9px 10px 9px 12px;
+    font-size:13px;
+    margin-bottom:6px;
+  }
+  .benefit-chip .remove{
+    background:none;
+    border:none;
+    color:var(--text-muted);
+    cursor:pointer;
+    font-size:16px;
+    padding:0 4px;
+    line-height:1;
+  }
+  .benefits-list-wrap{margin-bottom:18px;}
+
+  /* client benefits list */
+  .perk-list{
+    list-style:none;
+    margin-bottom:16px;
+  }
+  .perk-list li{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    font-size:13.5px;
+    font-weight:600;
+    padding:10px 0;
+    border-bottom:1px solid var(--border);
+  }
+  .perk-list li:last-child{border-bottom:none;}
+  .perk-list i{
+    color:var(--orange);
+    font-size:17px;
+    margin-top:1px;
+    flex-shrink:0;
+  }
+
+  /* loyalty program */
+  .loyalty-box{
+    background:linear-gradient(180deg, #FFF8EC 0%, var(--surface) 100%);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:16px;
+    margin-top:16px;
+  }
+  .loyalty-title{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:4px;
+  }
+  .loyalty-title i{color:var(--orange);font-size:16px;}
+  .loyalty-sub{
+    font-size:12px;
+    color:var(--text-secondary);
+    margin-bottom:12px;
+    line-height:1.5;
+  }
+  .collection-shelf{
+    display:flex;
+    gap:6px;
+    margin-bottom:14px;
+  }
+  .shelf-slot{
+    width:32px;
+    height:32px;
+    border-radius:9px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .shelf-slot.filled{
+    background:var(--black);
+  }
+  .shelf-slot.filled i{color:var(--yellow);font-size:15px;}
+  .shelf-slot.empty{
+    border:1.5px dashed var(--border);
+    background:transparent;
+  }
+  .shelf-slot.empty i{color:var(--text-muted);font-size:14px;}
+  .progress-track{
+    width:100%;
+    height:8px;
+    background:var(--border);
+    border-radius:99px;
+    overflow:hidden;
+    margin-bottom:8px;
+  }
+  .progress-fill{
+    height:100%;
+    background:var(--orange);
+    border-radius:99px;
+    width:60%;
+  }
+  .progress-count{
+    font-size:11px;
+    color:var(--text-muted);
+    margin-bottom:14px;
+  }
+  .tier-row{
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .tier{
+    flex:1;
+    text-align:center;
+    padding:10px 4px;
+    border-radius:10px;
+    background:var(--card);
+    border:1px solid var(--border);
+  }
+  .tier.done{
+    background:var(--black);
+    border-color:var(--black);
+  }
+  .tier.done .tier-label, .tier.done .tier-name{color:#fff;}
+  .tier-label{
+    font-size:10px;
+    color:var(--text-muted);
+    font-weight:700;
+    margin-bottom:2px;
+  }
+  .tier-name{
+    font-size:11px;
+    font-weight:700;
+  }
+</style>
+</head>
+<body>
+
+<h1>Pingente exclusivo por estabelecimento</h1>
+
+<div class="tabs">
+  <button class="tab active" id="tab-btn-venue" onclick="showPanel('venue')">Dono do bar</button>
+  <button class="tab" id="tab-btn-client" onclick="showPanel('client')">Cliente</button>
+</div>
+
+<div class="phone">
+
+  <div id="panel-venue" class="panel active">
+    <div class="eyebrow">Criar pingente exclusivo · Bar do Zé</div>
+
+    <span class="label">Logo do estabelecimento</span>
+    <div class="logo-upload">
+      <div class="logo-drop" id="logo-drop" onclick="document.getElementById('logo-file').click()">
+        <i class="ti ti-upload"></i>
+      </div>
+      <div class="logo-drop-text" onclick="document.getElementById('logo-file').click()">
+        <b>Enviar logo</b><br>PNG ou JPG, até 2MB
+      </div>
+      <input type="file" id="logo-file" accept="image/*" style="display:none" onchange="handleLogo(event)">
+    </div>
+
+    <span class="label">Capacidade da casa</span>
+    <div style="margin-bottom:16px">
+      <input type="number" id="cap-input" value="500" oninput="update()">
+    </div>
+
+    <div class="stat-row">
+      <span class="k">Vagas do clube (10% da capacidade)</span>
+      <span class="v" id="vagas-out">50</span>
+    </div>
+
+    <span class="label">Mensalidade que os clientes pagam</span>
+    <input type="range" id="price-slider" min="590" max="1990" value="1490" step="100" oninput="update()">
+    <div class="range-labels">
+      <span class="min">Piso R$ 5,90</span>
+      <span class="val" id="price-out">R$ 14,90</span>
+      <span class="max">Teto R$ 19,90</span>
+    </div>
+
+    <span class="label">Benefícios do pingente</span>
+    <div class="benefit-input-row">
+      <input type="text" id="benefit-input" placeholder="Ex: acesso à área VIP">
+      <button class="btn-add" onclick="addBenefit()">+</button>
+    </div>
+    <div class="benefits-list-wrap" id="venue-benefits-list"></div>
+
+    <div class="breakdown">
+      <div class="bd-line"><span>Mensalidade</span><span id="split-total">R$ 14,90</span></div>
+      <div class="bd-line"><span>Taxa SnapPay (25%)</span><span id="split-fee">-R$ 3,73</span></div>
+      <div class="bd-line total"><span>Você recebe por assinante</span><span id="split-net">R$ 11,18</span></div>
+      <div class="bd-line month"><span>Com as vagas cheias</span><span id="split-month">R$ 558,75/mês</span></div>
+    </div>
+
+    <button class="primary">Publicar pingente</button>
+  </div>
+
+  <div id="panel-client" class="panel">
+    <div class="eyebrow">Pingente Bar do Zé</div>
+
+    <div class="hero-card">
+      <div class="hero-top">
+        <div class="hero-logo" id="client-logo"><i class="ti ti-building-store"></i></div>
+        <div class="club-name">Bar do Zé</div>
+      </div>
+      <div class="price">R$ 14,90/mês</div>
+    </div>
+
+    <span class="label" style="margin-bottom:10px;display:block">O que você ganha assinando</span>
+    <ul class="perk-list" id="client-benefits-list"></ul>
+
+    <div class="stat-row">
+      <span class="k">Vagas restantes</span>
+      <span class="v">13 de 50</span>
+    </div>
+
+    <button class="primary" style="margin-bottom:20px">Pegar meu pingente</button>
+
+    <div class="divider"></div>
+    <div class="eyebrow" style="margin-bottom:10px">Meu pingente ativo</div>
+    <div class="breakdown" style="margin-bottom:10px">
+      <div style="font-size:12px;font-weight:700;margin-bottom:4px">Ativa desde 03/2026 · próxima cobrança 12/09</div>
+      <div style="font-size:11px;color:var(--text-secondary)">Cancelar cancela na hora, sem multa</div>
+    </div>
+    <div class="btn-row">
+      <button class="secondary">Cancelar</button>
+      <button class="secondary">Repassar pingente</button>
+    </div>
+    <div class="fine">Repasse mediado pela SnapPay, valor limitado a até 2 mensalidades, pago em saldo SnapPay.</div>
+
+    <div class="loyalty-box">
+      <div class="loyalty-title"><i class="ti ti-crown"></i>Coleção SnapPay</div>
+      <div class="loyalty-sub">Você tem <b>3 de 5</b> pingentes colecionados. Faltam <b>2</b> para escolher um estabelecimento parceiro e ganhar <b>1 mês grátis</b> (até R$ 19,90).</div>
+      <div class="collection-shelf" id="collection-shelf"></div>
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <div class="progress-count">3 de 5 pingentes até a próxima recompensa</div>
+      <div class="tier-row">
+        <div class="tier done">
+          <div class="tier-label">3 pingentes</div>
+          <div class="tier-name">Explorador</div>
+        </div>
+        <div class="tier">
+          <div class="tier-label">5 pingentes</div>
+          <div class="tier-name">1 mês grátis</div>
+        </div>
+        <div class="tier">
+          <div class="tier-label">8 pingentes</div>
+          <div class="tier-name">Lenda SnapPay</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let benefits = ["Entrada grátis", "15% de desconto em bebidas", "Fura-fila na entrada"];
+
+function renderBenefits(){
+  const venueList = document.getElementById('venue-benefits-list');
+  venueList.innerHTML = '';
+  benefits.forEach((b, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'benefit-chip';
+    chip.innerHTML = '<span>' + b + '</span><button class="remove" onclick="removeBenefit(' + i + ')">&times;</button>';
+    venueList.appendChild(chip);
+  });
+
+  const clientList = document.getElementById('client-benefits-list');
+  clientList.innerHTML = '';
+  benefits.forEach(b => {
+    const li = document.createElement('li');
+    li.innerHTML = '<i class="ti ti-circle-check-filled"></i><span>' + b + '</span>';
+    clientList.appendChild(li);
+  });
+}
+
+function addBenefit(){
+  const input = document.getElementById('benefit-input');
+  const val = input.value.trim();
+  if(val){
+    benefits.push(val);
+    input.value = '';
+    renderBenefits();
+  }
+}
+
+function removeBenefit(i){
+  benefits.splice(i, 1);
+  renderBenefits();
+}
+
+function handleLogo(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    document.getElementById('logo-drop').style.backgroundImage = 'url(' + e.target.result + ')';
+    document.getElementById('logo-drop').innerHTML = '';
+    const clientLogo = document.getElementById('client-logo');
+    clientLogo.style.backgroundImage = 'url(' + e.target.result + ')';
+    clientLogo.innerHTML = '';
+  };
+  reader.readAsDataURL(file);
+}
+
+function showPanel(name){
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.getElementById('tab-btn-' + name).classList.add('active');
+}
+
+function update(){
+  const cap = parseInt(document.getElementById('cap-input').value) || 0;
+  const vagas = Math.round(cap * 0.1);
+  document.getElementById('vagas-out').textContent = vagas;
+
+  const cents = parseInt(document.getElementById('price-slider').value);
+  const price = cents / 100;
+  const fee = price * 0.25;
+  const net = price - fee;
+
+  document.getElementById('price-out').textContent = 'R$ ' + price.toFixed(2).replace('.', ',');
+  document.getElementById('split-total').textContent = 'R$ ' + price.toFixed(2).replace('.', ',');
+  document.getElementById('split-fee').textContent = '-R$ ' + fee.toFixed(2).replace('.', ',');
+  document.getElementById('split-net').textContent = 'R$ ' + net.toFixed(2).replace('.', ',');
+  document.getElementById('split-month').textContent = 'R$ ' + (net * vagas).toFixed(2).replace('.', ',') + '/mês';
+}
+
+renderBenefits();
+update();
+
+const shelf = document.getElementById('collection-shelf');
+if(shelf){
+  const total = 5, owned = 3;
+  for(let i = 0; i < total; i++){
+    const slot = document.createElement('div');
+    slot.className = 'shelf-slot ' + (i < owned ? 'filled' : 'empty');
+    slot.innerHTML = i < owned ? '<i class="ti ti-diamond-filled"></i>' : '<i class="ti ti-plus"></i>';
+    shelf.appendChild(slot);
+  }
+}
+</script>
+
+</body>
+</html>
